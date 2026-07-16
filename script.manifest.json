@@ -1,0 +1,17 @@
+{
+  "id": "11140c2f-a707-4e3c-b31b-9c2eaff84ef4",
+  "name": "npc生成器",
+  "type": "script",
+  "enabled": true,
+  "info": "发布于Discord社区。\n作者Lyra芜歌，请搭配npc生成器世界书使用\nhttps://discord.com/channels/1134557553011998840/1494050594653212723",
+  "button": {
+    "enabled": true,
+    "buttons": [
+      {
+        "name": "角色信息归档",
+        "visible": true
+      }
+    ]
+  },
+  "data": {}
+}

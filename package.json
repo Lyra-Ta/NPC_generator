@@ -1,0 +1,45 @@
+{
+  "name": "npc-generator-archiver",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#worldbook-mutation": "./src/worldbook-mutation.ts"
+  },
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=22.6.0",
+    "pnpm": ">=10.22.0"
+  },
+  "scripts": {
+    "build": "pnpm typecheck && webpack --mode production && node scripts/export-script.mjs",
+    "build:bundle": "webpack --mode production",
+    "watch": "webpack --mode development --watch --progress",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "purge:jsdelivr": "node scripts/purge-jsdelivr.mjs",
+    "format": "prettier --write \"src/**/*.{ts,css,html,vue}\" \"test/**/*.ts\" \"*.{json,md,mjs}\" \"scripts/**/*.mjs\""
+  },
+  "dependencies": {
+    "pinia": "3.0.4",
+    "vue": "3.5.34"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.4",
+    "@types/jquery": "3.5.34",
+    "@types/toastr": "2.1.43",
+    "@vue/compiler-sfc": "3.5.34",
+    "autoprefixer": "10.5.0",
+    "css-loader": "7.1.4",
+    "postcss": "8.5.14",
+    "postcss-loader": "8.2.1",
+    "postcss-minify": "1.2.0",
+    "prettier": "3.8.3",
+    "tailwindcss": "4.2.4",
+    "ts-loader": "9.5.7",
+    "typescript": "6.0.0-dev.20250807",
+    "vue-loader": "17.4.2",
+    "vue-style-loader": "4.1.3",
+    "webpack": "5.106.2",
+    "webpack-cli": "6.0.1"
+  }
+}

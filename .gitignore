@@ -1,0 +1,20 @@
+node_modules/
+.DS_Store
+
+# Local credentials and logs
+.env
+.env.*
+!.env.example
+*.log
+pnpm-debug.log*
+
+# Generated caches and editor state
+coverage/
+.cache/
+*.tsbuildinfo
+.idea/
+.vscode/
+.history/
+
+# Local legacy snapshots; current release artifacts remain tracked in dist/.
+archive/
