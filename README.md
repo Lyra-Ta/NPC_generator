@@ -9,6 +9,12 @@ Generator 的源码、构建配置、测试和发布文件都在这里维护。
 - [角色生成器世界书 v1.4](https://cdn.jsdelivr.net/gh/Lyra-Ta/NPC_generator@main/-%E8%A7%92%E8%89%B2%E7%94%9F%E6%88%90%E5%99%A8v1.4-.json)
 - [单文件 bundle](https://cdn.jsdelivr.net/gh/Lyra-Ta/NPC_generator@main/dist/index.js)
 
+酒馆助手脚本可直接引用：
+
+```js
+import 'https://cdn.jsdelivr.net/gh/Lyra-Ta/NPC_generator@main/dist/index.js';
+```
+
 这些链接跟随 `main` 分支，适合获取当前版。需要固定版本时应改用 Git tag 或 commit SHA。
 
 ## 文件层次
