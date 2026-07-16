@@ -226,51 +226,82 @@
     <!-- 已有档案：先冻结新旧内容并展示，确认后才按 uid 覆盖正文。 -->
     <div
       v-if="store.overwriteProposal"
-      class="fixed inset-0 flex items-center justify-center z-[60] p-3"
+      class="archive-compare-overlay fixed inset-0 flex items-center justify-center z-[60]"
       :style="{ background: 'var(--archive-overlay)' }"
       @click.self="cancelOverwrite"
     >
-      <div class="archive-card flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-lg">
-        <header class="archive-header px-4 py-3 sm:px-5">
-          <h3 class="text-base font-medium">对比后覆盖档案</h3>
-          <p class="archive-text-muted mt-1 text-[12px] leading-relaxed">
+      <div
+        class="archive-card archive-compare-card flex min-h-0 w-full max-w-4xl flex-col overflow-hidden rounded-lg"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="archive-overwrite-title"
+        aria-describedby="archive-overwrite-meta archive-overwrite-note"
+      >
+        <header class="archive-header archive-compare-header shrink-0 px-3 py-2.5 sm:px-5 sm:py-3">
+          <h3 id="archive-overwrite-title" class="text-base font-medium">对比后覆盖档案</h3>
+          <p
+            id="archive-overwrite-meta"
+            class="archive-compare-meta archive-text-muted mt-1 text-[12px] leading-relaxed"
+          >
             世界书 <code class="archive-code rounded px-1">{{ store.overwriteProposal.worldbookName }}</code> · 条目
             <code class="archive-code rounded px-1">{{ store.overwriteProposal.entryName }}</code>
           </p>
         </header>
 
-        <div class="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-y-auto p-4 sm:grid-cols-2 sm:p-5">
-          <section class="flex min-h-0 flex-col">
-            <div class="archive-text-muted mb-1.5 text-[12px] font-medium">当前已存档内容</div>
-            <pre class="archive-compare-content archive-compare-old">{{ store.overwriteProposal.oldContent }}</pre>
+        <div
+          class="archive-compare-grid grid min-h-0 flex-1 grid-cols-1 gap-2 overflow-hidden p-3 sm:grid-cols-2 sm:gap-3 sm:p-5"
+        >
+          <section class="flex min-h-0 min-w-0 flex-col">
+            <div id="archive-compare-old-label" class="archive-text-muted mb-1.5 text-[12px] font-medium">
+              当前已存档内容
+            </div>
+            <pre
+              class="archive-compare-content archive-compare-old"
+              aria-labelledby="archive-compare-old-label"
+              tabindex="0"
+              >{{ store.overwriteProposal.oldContent }}</pre
+            >
           </section>
-          <section class="flex min-h-0 flex-col">
-            <div class="archive-text-muted mb-1.5 text-[12px] font-medium">本次准备写入内容</div>
-            <pre class="archive-compare-content archive-compare-new">{{ store.overwriteProposal.newContent }}</pre>
+          <section class="flex min-h-0 min-w-0 flex-col">
+            <div id="archive-compare-new-label" class="archive-text-muted mb-1.5 text-[12px] font-medium">
+              本次准备写入内容
+            </div>
+            <pre
+              class="archive-compare-content archive-compare-new"
+              aria-labelledby="archive-compare-new-label"
+              tabindex="0"
+              >{{ store.overwriteProposal.newContent }}</pre
+            >
           </section>
         </div>
 
-        <div class="archive-header flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 sm:px-5">
-          <span class="archive-text-muted text-[11px]">
+        <footer
+          class="archive-compare-footer flex shrink-0 flex-col gap-2 border-t px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+        >
+          <span id="archive-overwrite-note" class="archive-text-muted text-[12px] leading-relaxed">
             {{
               store.overwriteProposal.oldContent === store.overwriteProposal.newContent
                 ? '两边内容完全相同，无需覆盖'
                 : '仅替换正文；灯型和其他世界书设置保持不变'
             }}
           </span>
-          <div class="ml-auto flex gap-2">
-            <button class="archive-btn rounded px-4 py-1.5" :disabled="store.saving" @click="cancelOverwrite">
+          <div class="archive-compare-actions">
+            <button
+              class="archive-btn archive-compare-action rounded px-3 py-2 sm:px-4"
+              :disabled="store.saving"
+              @click="cancelOverwrite"
+            >
               保留旧档案
             </button>
             <button
-              class="archive-btn-primary rounded px-4 py-1.5 font-medium"
+              class="archive-btn-primary archive-compare-action rounded px-3 py-2 font-medium sm:px-4"
               :disabled="store.saving || store.overwriteProposal.oldContent === store.overwriteProposal.newContent"
               @click="store.confirmOverwrite()"
             >
               {{ store.saving ? '覆盖中…' : '确认覆盖' }}
             </button>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   </div>
@@ -452,6 +483,8 @@ function lampTooltip(color: LampColor): string {
   color: var(--archive-text);
   font-family: ui-monospace, monospace;
   font-size: 0.9em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .archive-swatch {
   border-color: transparent;
@@ -533,9 +566,39 @@ function lampTooltip(color: LampColor): string {
   color: var(--archive-text);
   font-weight: 500;
 }
+.archive-compare-overlay {
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-right: max(12px, env(safe-area-inset-right));
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(12px, env(safe-area-inset-left));
+}
+.archive-compare-card {
+  height: calc(100vh - 24px);
+  max-height: 760px;
+}
+@supports (height: 100dvh) {
+  .archive-compare-card {
+    height: calc(100dvh - 24px);
+  }
+}
+.archive-compare-header,
+.archive-compare-footer {
+  background: var(--archive-card);
+}
+.archive-compare-footer {
+  border-color: var(--archive-border);
+}
+.archive-compare-meta {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.archive-compare-grid {
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
 .archive-compare-content {
-  min-height: 160px;
-  max-height: 34vh;
+  flex: 1;
+  min-height: 0;
+  max-height: none;
   overflow: auto;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -546,25 +609,62 @@ function lampTooltip(color: LampColor): string {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'PingFang SC', 'Microsoft YaHei', monospace;
   font-size: 12px;
   line-height: 1.55;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 .archive-compare-old {
+  background: var(--archive-row);
   background: color-mix(in srgb, #b75d55 7%, var(--archive-row));
 }
 .archive-compare-new {
+  background: var(--archive-row);
   background: color-mix(in srgb, #4f8a61 8%, var(--archive-row));
 }
-
-@media (max-width: 639px) {
-  .archive-compare-content {
-    max-height: none;
-    overflow: visible;
-  }
+.archive-compare-actions {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.archive-compare-action {
+  min-height: 44px;
 }
 
 @media (min-width: 640px) {
-  .archive-compare-content {
-    min-height: 280px;
-    max-height: 54vh;
+  .archive-compare-grid {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .archive-compare-actions {
+    display: flex;
+    width: auto;
+    margin-left: auto;
+  }
+}
+
+@media (max-height: 560px) {
+  .archive-compare-overlay {
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-right: max(8px, env(safe-area-inset-right));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    padding-left: max(8px, env(safe-area-inset-left));
+  }
+  .archive-compare-card {
+    height: calc(100vh - 16px);
+  }
+  @supports (height: 100dvh) {
+    .archive-compare-card {
+      height: calc(100dvh - 16px);
+    }
+  }
+  .archive-compare-header,
+  .archive-compare-footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .archive-compare-grid {
+    gap: 8px;
+    padding: 8px;
   }
 }
 </style>
